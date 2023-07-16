@@ -45,10 +45,13 @@ namespace Subtegral.DialogueSystem.Editor
             var fileNameTextField = new TextField("File Name:");
 
             fileNameTextField.SetValueWithoutNotify(fileName);
+            // To update the visual of the textField with the value
             fileNameTextField.MarkDirtyRepaint();
+            // Calls the lambda expression when the value of the text changes 
             fileNameTextField.RegisterValueChangedCallback(evt => fileName = evt.newValue);
 
             toolbar.Add(fileNameTextField);
+            // RequestDataOperation is the function that will be called if we click on the Button
             toolbar.Add(new Button(() => RequestDataOperation(true)) {text = "Save Data"});
             toolbar.Add(new Button(() => RequestDataOperation(false)) {text = "Load Data"});
             rootVisualElement.Add(toolbar);

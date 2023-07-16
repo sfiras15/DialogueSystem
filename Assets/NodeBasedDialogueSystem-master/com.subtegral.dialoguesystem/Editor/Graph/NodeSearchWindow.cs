@@ -14,7 +14,6 @@ namespace Subtegral.DialogueSystem.Editor
         private StoryGraphView graphView;
 
         private Texture2D indentationIcon;
-        
         public void Configure(EditorWindow window,StoryGraphView graphView)
         {
             this.window = window;

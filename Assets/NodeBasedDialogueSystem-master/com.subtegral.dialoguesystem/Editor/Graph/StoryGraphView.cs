@@ -29,6 +29,7 @@ namespace Subtegral.DialogueSystem.Editor
             this.AddManipulator(new RectangleSelector());
             this.AddManipulator(new FreehandSelector());
 
+            // type is inferred
             var grid = new GridBackground();
             Insert(0, grid);
             grid.StretchToParentSize();
@@ -42,6 +43,7 @@ namespace Subtegral.DialogueSystem.Editor
         {
             searchWindow = ScriptableObject.CreateInstance<NodeSearchWindow>();
             searchWindow.Configure(editorWindow, this);
+            // delegate nodeCreationRequest , the type is inferred (deduced)  
             nodeCreationRequest = context =>
                 SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), searchWindow); // searchWindow must be of type ScriptableObject according to the documentation
         }
@@ -75,14 +77,19 @@ namespace Subtegral.DialogueSystem.Editor
                 GUID = Guid.NewGuid().ToString()
             };
             tempDialogueNode.styleSheets.Add(Resources.Load<StyleSheet>("Node"));
+
+            //add an input port into the inputContainer
             var inputPort = GetPortInstance(tempDialogueNode, Direction.Input, Port.Capacity.Multi);
             inputPort.portName = "Input";
             tempDialogueNode.inputContainer.Add(inputPort);
+            // Always call these after adding a port inside a container so that they become visible
             tempDialogueNode.RefreshExpandedState();
             tempDialogueNode.RefreshPorts();
             tempDialogueNode.SetPosition(new Rect(position,
                 DefaultNodeSize));
 
+
+            //add a textField  into the MainContainer (at the top of the node)
             var textField = new TextField("");
             textField.RegisterValueChangedCallback(evt =>
             {
@@ -92,6 +99,8 @@ namespace Subtegral.DialogueSystem.Editor
             textField.SetValueWithoutNotify(tempDialogueNode.title);
             tempDialogueNode.mainContainer.Add(textField);
 
+            //add a button  into the titleButtonContainer
+
             var button = new Button(() => { AddChoicePort(tempDialogueNode); })
             {
                 text = "Add Choice"
@@ -100,14 +109,17 @@ namespace Subtegral.DialogueSystem.Editor
             return tempDialogueNode;
         }
 
-
+        //Create Output ports inside the outputContainer
         public void AddChoicePort(DialogueNode nodeCache, string overriddenPortName = "")
         {
             var generatedPort = GetPortInstance(nodeCache, Direction.Output);
             var portLabel = generatedPort.contentContainer.Q<Label>("type");
             generatedPort.contentContainer.Remove(portLabel);
 
+            // What is connector?
             var outputPortCount = nodeCache.outputContainer.Query("connector").ToList().Count();
+
+            // Determines the name of the port based on the number of output ports
             var outputPortName = string.IsNullOrEmpty(overriddenPortName)
                 ? $"Option {outputPortCount + 1}"
                 : overriddenPortName;
@@ -128,12 +140,14 @@ namespace Subtegral.DialogueSystem.Editor
             generatedPort.contentContainer.Add(deleteButton);
             generatedPort.portName = outputPortName;
             nodeCache.outputContainer.Add(generatedPort);
+            // Always call these after adding/ deleting a port inside a container so that they become visible
             nodeCache.RefreshPorts();
             nodeCache.RefreshExpandedState();
         }
 
         private void RemovePort(Node node, Port socket)
         {
+            // look for the edge that have the same output portName and same output Node that we passed in argument
             var targetEdge = edges.ToList()
                 .Where(x => x.output.portName == socket.portName && x.output.node == socket.node);
             if (targetEdge.Any())
@@ -144,10 +158,13 @@ namespace Subtegral.DialogueSystem.Editor
             }
 
             node.outputContainer.Remove(socket);
+
             node.RefreshPorts();
             node.RefreshExpandedState();
         }
 
+
+        //returns a port in order to add it inside an output/input container
         private Port GetPortInstance(DialogueNode node, Direction nodeDirection,
             Port.Capacity capacity = Port.Capacity.Single)
         {
@@ -168,6 +185,8 @@ namespace Subtegral.DialogueSystem.Editor
             generatedPort.portName = "Next";
             nodeCache.outputContainer.Add(generatedPort);
 
+
+            // the entryNode can't be moved/ deleted
             nodeCache.capabilities &= ~Capabilities.Movable;
             nodeCache.capabilities &= ~Capabilities.Deletable;
 

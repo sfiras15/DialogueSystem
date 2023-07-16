@@ -20,9 +20,10 @@ namespace Subtegral.DialogueSystem.Editor
 
         private DialogueContainer _dialogueContainer;
         private StoryGraphView _graphView;
-
+            
         public static GraphSaveUtility GetInstance(StoryGraphView graphView)
         {
+            //Object initializer Syntax
             return new GraphSaveUtility
             {
                 _graphView = graphView
@@ -55,8 +56,13 @@ namespace Subtegral.DialogueSystem.Editor
 
         private bool SaveNodes(string fileName, DialogueContainer dialogueContainerObject)
         {
+            // If there aren't any edges don't save;
             if (!Edges.Any()) return false;
+
+            // Edges that have input ports connected to an output port
             var connectedSockets = Edges.Where(x => x.input.node != null).ToArray();
+
+            // Saving NodesLinks
             for (var i = 0; i < connectedSockets.Count(); i++)
             {
                 var outputNode = (connectedSockets[i].output.node as DialogueNode);
@@ -69,6 +75,7 @@ namespace Subtegral.DialogueSystem.Editor
                 });
             }
 
+            // Saving Nodes
             foreach (var node in Nodes.Where(node => !node.EntyPoint))
             {
                 dialogueContainerObject.DialogueNodeData.Add(new DialogueNodeData
@@ -104,7 +111,10 @@ namespace Subtegral.DialogueSystem.Editor
             Nodes.Find(x => x.EntyPoint).GUID = _dialogueContainer.NodeLinks[0].BaseNodeGUID;
             foreach (var perNode in Nodes)
             {
+
+                // if it's the EntryNode skip it 
                 if (perNode.EntyPoint) continue;
+                // Remove the rest of the nodes and their edges
                 Edges.Where(x => x.input.node == perNode).ToList()
                     .ForEach(edge => _graphView.RemoveElement(edge));
                 _graphView.RemoveElement(perNode);
@@ -118,6 +128,7 @@ namespace Subtegral.DialogueSystem.Editor
         {
             foreach (var perNode in _dialogueContainer.DialogueNodeData)
             {
+                //Creating a node for each node in the dialogue Container
                 var tempNode = _graphView.CreateNode(perNode.DialogueText, Vector2.zero);
                 tempNode.GUID = perNode.NodeGUID;
                 _graphView.AddElement(tempNode);
@@ -153,6 +164,8 @@ namespace Subtegral.DialogueSystem.Editor
                 output = outputSocket,
                 input = inputSocket
             };
+
+            //establish the connections between the tempEdge and the input/output ports. 
             tempEdge?.input.Connect(tempEdge);
             tempEdge?.output.Connect(tempEdge);
             _graphView.Add(tempEdge);
