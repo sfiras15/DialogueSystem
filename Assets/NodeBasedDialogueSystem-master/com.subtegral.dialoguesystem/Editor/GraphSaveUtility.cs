@@ -82,7 +82,8 @@ namespace Subtegral.DialogueSystem.Editor
                 {
                     NodeGUID = node.GUID,
                     DialogueText = node.DialogueText,
-                    Position = node.GetPosition().position
+                    NodeType = node.NodeType,
+                    Position = node.GetPosition().position,
                 });
             }
 
@@ -129,7 +130,7 @@ namespace Subtegral.DialogueSystem.Editor
             foreach (var perNode in _dialogueContainer.DialogueNodeData)
             {
                 //Creating a node for each node in the dialogue Container
-                var tempNode = _graphView.CreateNode(perNode.DialogueText, Vector2.zero);
+                var tempNode = _graphView.CreateNode(perNode.DialogueText, Vector2.zero,perNode.NodeType);
                 tempNode.GUID = perNode.NodeGUID;
                 _graphView.AddElement(tempNode);
 

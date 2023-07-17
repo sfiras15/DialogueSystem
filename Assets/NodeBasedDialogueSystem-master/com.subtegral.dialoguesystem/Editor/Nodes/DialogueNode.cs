@@ -11,5 +11,6 @@ namespace Subtegral.DialogueSystem.Editor
         public string DialogueText;
         public string GUID;
         public bool EntyPoint = false;
+        public NodeTypes NodeType;
     }
 }

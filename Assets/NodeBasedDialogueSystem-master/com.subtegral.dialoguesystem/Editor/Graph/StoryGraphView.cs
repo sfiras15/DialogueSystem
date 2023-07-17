@@ -62,20 +62,32 @@ namespace Subtegral.DialogueSystem.Editor
 
             return compatiblePorts;
         }
-
+        
         public void CreateNewDialogueNode(string nodeName, Vector2 position)
         {
-            AddElement(CreateNode(nodeName, position));
+            AddElement(CreateNode(nodeName, position, NodeTypes.Dialogue));
+        }
+        public void CreateSpeechNode(string nodeName, Vector2 position)
+        {
+            AddElement(CreateNode(nodeName, position, NodeTypes.Speech));
+        }
+        public void CreateEventNode(string nodeName, Vector2 position)
+        {
+            AddElement(CreateNode(nodeName, position, NodeTypes.Event));
         }
 
-        public DialogueNode CreateNode(string nodeName, Vector2 position)
+
+        public DialogueNode CreateNode(string nodeName, Vector2 position,NodeTypes nodeType)
         {
+
             var tempDialogueNode = new DialogueNode()
             {
                 title = nodeName,
                 DialogueText = nodeName,
-                GUID = Guid.NewGuid().ToString()
+                GUID = Guid.NewGuid().ToString(),
+                NodeType = nodeType
             };
+            Debug.Log(tempDialogueNode.NodeType);
             tempDialogueNode.styleSheets.Add(Resources.Load<StyleSheet>("Node"));
 
             //add an input port into the inputContainer

@@ -34,6 +34,14 @@ namespace Subtegral.DialogueSystem.Editor
                 {
                     level = 2, userData = new DialogueNode()
                 },
+                new SearchTreeEntry(new GUIContent("Speech Node", indentationIcon))
+                {
+                    level = 2, userData = new SpeechNode()
+                },
+                new SearchTreeEntry(new GUIContent("Event Node", indentationIcon))
+                {
+                    level = 2, userData = new EventNode()
+                },
                 //Add other types of nodes here
             };
 
@@ -49,9 +57,16 @@ namespace Subtegral.DialogueSystem.Editor
             switch (SearchTreeEntry.userData)
             {
                 case DialogueNode dialogueNode:
-                    graphView.CreateNewDialogueNode("Dialogue Node",graphMousePosition);
+                    graphView.CreateNewDialogueNode("Dialogue Node", graphMousePosition);
                     return true;
-                // and here 
+                case SpeechNode speechNode:
+                    graphView.CreateSpeechNode("Speech Node", graphMousePosition);
+                    return true;
+                case EventNode eventNode:
+                    graphView.CreateEventNode("Event Node", graphMousePosition);
+                    return true;
+
+                    // and here 
             }
             return false;
         }
