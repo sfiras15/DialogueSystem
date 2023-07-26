@@ -32,7 +32,7 @@ namespace Subtegral.DialogueSystem.Editor
 
         public void SaveGraph(string fileName)
         {
-            var dialogueContainerObject = ScriptableObject.CreateInstance<DialogueContainer>();
+            DialogueContainer dialogueContainerObject = ScriptableObject.CreateInstance<DialogueContainer>();
             if (!SaveNodes(fileName, dialogueContainerObject)) return;
             if (!AssetDatabase.IsValidFolder("Assets/Resources"))
                 AssetDatabase.CreateFolder("Assets", "Resources");
@@ -134,6 +134,8 @@ namespace Subtegral.DialogueSystem.Editor
                 tempNode.GUID = perNode.NodeGUID;
                 _graphView.AddElement(tempNode);
 
+
+                //List of edges that are branching out of each perNode
                 var nodePorts = _dialogueContainer.NodeLinks.Where(x => x.BaseNodeGUID == perNode.NodeGUID).ToList();
                 nodePorts.ForEach(x => _graphView.AddChoicePort(tempNode, x.PortName));
             }
@@ -143,7 +145,7 @@ namespace Subtegral.DialogueSystem.Editor
         {
             for (var i = 0; i < Nodes.Count; i++)
             {
-                var k = i; //Prevent access to modified closure
+                var k = i;
                 var connections = _dialogueContainer.NodeLinks.Where(x => x.BaseNodeGUID == Nodes[k].GUID).ToList();
                 for (var j = 0; j < connections.Count(); j++)
                 {
@@ -172,4 +174,4 @@ namespace Subtegral.DialogueSystem.Editor
             _graphView.Add(tempEdge);
         }
     }
-}
+}   

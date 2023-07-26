@@ -16,10 +16,12 @@ namespace Subtegral.DialogueSystem.Editor
         private string fileName = "New Narrative";
 
         private StoryGraphView graphView;
+
+        private Toolbar toolbar;
         [MenuItem("Graph/Narrative Graph")]
         public static void CreateGraphViewWindow()
         {
-            var window = GetWindow<StoryGraph>();
+            StoryGraph window = GetWindow<StoryGraph>();
             window.titleContent = new GUIContent("Narrative Graph");
         }
 
@@ -41,8 +43,8 @@ namespace Subtegral.DialogueSystem.Editor
 
         private void GenerateToolbar()
         {
-            var toolbar = new Toolbar();
-            var fileNameTextField = new TextField("File Name:");
+            toolbar = new Toolbar();
+            TextField fileNameTextField = new TextField("File Name:");
 
             fileNameTextField.SetValueWithoutNotify(fileName);
             // To update the visual of the textField with the value
@@ -61,7 +63,7 @@ namespace Subtegral.DialogueSystem.Editor
         {
             if (!string.IsNullOrEmpty(fileName))
             {
-                var saveUtility = GraphSaveUtility.GetInstance(graphView);
+                GraphSaveUtility saveUtility = GraphSaveUtility.GetInstance(graphView);
                 if (save)
                     saveUtility.SaveGraph(fileName);
                 else
@@ -76,6 +78,7 @@ namespace Subtegral.DialogueSystem.Editor
         private void OnDisable()
         {
             rootVisualElement.Remove(graphView);
+            rootVisualElement.Remove(toolbar);
         }
     }
 }

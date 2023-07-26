@@ -26,7 +26,7 @@ namespace Subtegral.DialogueSystem.Editor
         
         public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
         {
-            var tree = new List<SearchTreeEntry>
+            List<SearchTreeEntry> tree = new List<SearchTreeEntry>
             {
                 new SearchTreeGroupEntry(new GUIContent("Create Node"), 0),
                 new SearchTreeGroupEntry(new GUIContent("Dialogue"), 1),
@@ -51,9 +51,9 @@ namespace Subtegral.DialogueSystem.Editor
         public bool OnSelectEntry(SearchTreeEntry SearchTreeEntry, SearchWindowContext context)
         {
             //Editor window-based mouse position
-            var mousePosition = window.rootVisualElement.ChangeCoordinatesTo(window.rootVisualElement.parent,
+            Vector2 mousePosition = window.rootVisualElement.ChangeCoordinatesTo(window.rootVisualElement.parent,
                 context.screenMousePosition - window.position.position);
-            var graphMousePosition = graphView.contentViewContainer.WorldToLocal(mousePosition);
+            Vector2 graphMousePosition = graphView.contentViewContainer.WorldToLocal(mousePosition);
             switch (SearchTreeEntry.userData)
             {
                 case DialogueNode dialogueNode:
